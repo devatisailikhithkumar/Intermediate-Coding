@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary - Food Order System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Order Summary</h1>
+    </header>
+    <div class="order-summary">
+        <h2>Your Items</h2>
+        <ul id="order-items"></ul> <!-- List to display the cart items -->
+        <p>Total: $<span id="final-total">0.00</span></p> <!-- Total price -->
+        <button class="btn" onclick="finishOrder()">Finish Order</button>
+    </div>
+
+    <script>
+        // Function to load and display the order summary
+        function loadOrderSummary() {
+            // Retrieve the cart data from localStorage
+            const cart = JSON.parse(localStorage.getItem('cart')) || []; // Use empty array if no cart found
+            const orderItems = document.getElementById('order-items');
+            const finalTotal = document.getElementById('final-total');
+
+            // Initialize total price to 0
+            let total = 0;
+
+            // Check if the cart is empty
+            if (cart.length === 0) {
+                orderItems.innerHTML = '<li>Your cart is empty!</li>'; // Display message if cart is empty
+            } else {
+                // Loop through cart items and display each one
+                cart.forEach(cartItem => {
+                    const li = document.createElement('li');
+                    li.textContent = `${cartItem.item} - $${cartItem.price.toFixed(2)} x ${cartItem.quantity}`;
+                    orderItems.appendChild(li);
+
+                    // Add to the total price
+                    total += cartItem.price * cartItem.quantity;
+                });
+
+                // Update the total price in the HTML
+                finalTotal.textContent = total.toFixed(2);
+            }
+        }
+
+        // Function to finish the order and clear the cart
+        function finishOrder() {
+            alert('Thank you for your order! Your total is: $' + document.getElementById('final-total').textContent);
+            localStorage.removeItem('cart'); // Clear the cart after order is complete
+            window.location.href = 'index.html'; // Redirect to home page
+        }
+
+        // Load the order summary when the page loads
+        document.addEventListener('DOMContentLoaded', loadOrderSummary);
+    </script>
+</body>
+</html>
